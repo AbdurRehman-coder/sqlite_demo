@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io' as io;
@@ -25,7 +26,7 @@ class DBHelper{
 // it will run Query into database
 _onCreate(Database db, int version) async{
     await db.execute(
-      'CREATE TABLE notes (id, INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, description TEXT NOT NULL, pageNumber INTEGER NOT NULL, email TEXT'
+        "CREATE TABLE notes (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL,age INTEGER NOT NULL, description TEXT NOT NULL, email TEXT)"
     );
 }
 // insert data to database through toMap
@@ -34,10 +35,46 @@ var dbClient = await db;
 await dbClient!.insert('notes' ,  dataModel.toMap());
 return dataModel;
   }
+  //it will get all the data from database and decode the json data
+  // with help of DataModel.fromMap() name_constructor
   Future<List<DataModel>> getCartWithId() async{
     var dbClient = await db;
-    final List<Map<String, Object>> queryResult = await dbClient.
+    final List<Map<String, Object?>> queryResult = await dbClient!.query('notes');
+    return queryResult.map((e) => DataModel.fromMap(e)).toList();
   }
 
+  //Delete table content
+Future deleteTableContent() async{
+    var dbClient = await db;
+    return await dbClient!.delete(
+      'notes'
+    );
 }
+// Delete some specific product
+Future<int> deleteProducts(int id) async{
+    var dbClient = await db;
+    return await dbClient!.delete(
+      'notes',
+      where: 'id = ?',
+      whereArgs: [id]
+    );
+}
+//updating database
+Future<int> updateQuantity(DataModel dataModel) async{
+    var dbClient = await db;
+    return await dbClient!.update(
+    'notes',
+      dataModel.toMap(),
+      where: 'id = ?',
+      whereArgs: [dataModel.id],
+
+        );
+}
+
+//Close database
+Future close() async {
+    var dbClient = await db;
+    return await dbClient!.close();
+}
+
 }

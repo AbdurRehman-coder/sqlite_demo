@@ -4,17 +4,17 @@ class DataModel{
   int? id;
   String? title;
   String? description;
-  int? pageNumber;
+  int? age;
   String? email;
   //Constructor for initializing properties
-  DataModel({this.id, required this.title, required this.description, required this.pageNumber, this.email});
+  DataModel({this.id, required this.title, required this.description, required this.age, this.email});
 
   //Named_Constructor used as json.decoder (Deserialization)
   DataModel.fromMap(Map<String, dynamic> mapRes):
       id = mapRes['id'],
       title = mapRes['title'],
       description = mapRes['description'],
-      pageNumber = mapRes['pageNumber'],
+      age = mapRes['age'],
       email = mapRes['email'];
 
 //convert class data to json  (Serialization)
@@ -23,7 +23,7 @@ class DataModel{
     'id' : id,
     'title' : title,
     'description' : description,
-    'pageNumber' : pageNumber,
+    'age' : age,
     'email' : email,
 
   };
